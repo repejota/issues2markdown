@@ -13,6 +13,7 @@ releasing.
 
 0.1.0 (unreleased)
 ------------------
+- [ ] repejota/issues2markdown : [Add support for goreleaser](https://github.com/repejota/issues2markdown/issues/51)
 - [x] repejota/issues2markdown : [defaultQuery should be provided by QueryOptions](https://github.com/repejota/issues2markdown/issues/37)
 - [x] repejota/issues2markdown : [defaultTemplate should be on RenderOptions](https://github.com/repejota/issues2markdown/issues/34)
 - [x] repejota/issues2markdown : [github_token should be on QueryOptions](https://github.com/repejota/issues2markdown/issues/33)
