@@ -62,6 +62,7 @@ dev-deps:	## Install dev dependencies
 	go get -t -u github.com/inconshreveable/mousetrap
 	go get -t -u github.com/alecthomas/gometalinter
 	gometalinter --install
+	go get -t -u github.com/goreleaser/goreleaser
 
 # Cleaning up
 
@@ -80,31 +81,9 @@ godoc-serve:	## Serve documentation (godoc format) for this package at port HTTP
 # Distribution
 
 .PHONY: dist
-dist: clean dist-prepare dist-darwin dist-linux dist-windows	## Generate distribution packages
+dist: clean		## Generate distribution packages
+	LAST_TAG=${VERSION} goreleaser --rm-dist
 
-dist-prepare:
-	mkdir -p dist
-
-dist-darwin:
-	GOOS=darwin GOARCH=amd64 go build ${LDFLAGS} -o ${BINARY} ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-darwin-amd64.zip ${BINARY} ${DIST_INCLUDE_FILES}
-	GOOS=darwin GOARCH=386 go build ${LDFLAGS} -o ${BINARY} ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-darwin-386.zip ${BINARY} ${DIST_INCLUDE_FILES}
-	rm -rf ${BINARY}
-
-dist-linux:
-	GOOS=linux GOARCH=amd64 go build ${LDFLAGS} -o ${BINARY} ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-linux-amd64.zip ${BINARY} ${DIST_INCLUDE_FILES}
-	GOOS=linux GOARCH=386 go build ${LDFLAGS} -o ${BINARY} ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-linux-386.zip ${BINARY} ${DIST_INCLUDE_FILES}
-	rm -rf ${BINARY}
-
-dist-windows:
-	GOOS=windows GOARCH=amd64 go build ${LDFLAGS} -o ${BINARY}.exe ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-windows-amd64.zip ${BINARY}.exe ${DIST_INCLUDE_FILES}
-	GOOS=windows GOARCH=386 go build ${LDFLAGS} -o ${BINARY}.exe ${MAIN_PACKAGE}
-	zip ${DIST_FOLDER}/${BINARY}-${VERSION}-windows-386.zip ${BINARY}.exe ${DIST_INCLUDE_FILES}
-	rm -rf ${BINARY}.exe
 
 dist-clean: clean 	# Clean distribution files
 	rm -rf ${DIST_FOLDER}

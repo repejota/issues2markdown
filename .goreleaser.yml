@@ -1,0 +1,77 @@
+# .goreleaser.yml
+project_name: issues2markdown
+
+builds:
+  - main: cmd/issues2markdown/main.go
+
+    binary: issues2markdown
+  
+    env:
+      - CGO_ENABLED=0
+
+    goos:
+      - darwin
+      - linux
+      - windows
+
+    goarch:
+      - 386
+      - amd64
+
+    ldflags: -s -w -X main.Version={{.Env.LAST_TAG}} -X main.Build={{.Commit}}
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+    
+archive:
+  # You can change the name of the archive.
+  # This is parsed with the Go template engine and the following variables
+  # are available:
+  # - ProjectName
+  # - Binary (Name of the binary if the packaging format is binary)
+  # - Tag
+  # - Version (Git tag without `v` prefix)
+  # - Os
+  # - Arch
+  # - Arm (ARM version)
+  # - Env (environment variables)
+  # Defaults:
+  # - if format is `tar.gz` or `zip`:
+  #   - `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}`
+  # - if format is `binary`:
+  #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}`
+  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+  # Replacements for GOOS and GOARCH in the archive name.
+  # Keys should be valid GOOSs or GOARCHs.
+  # Values are the respective replacements.
+  # Default is empty.
+  replacements:
+    386: 32-bit
+    amd64: 64-bit
+    darwin: macOS
+
+  # Set to true, if you want all files in the archive to be in a single directory.
+  # If set to true and you extract the archive 'goreleaser_Linux_arm64.tar.gz',
+  # you get a folder 'goreleaser_Linux_arm64'.
+  # If set to false, all files are extracted separately.
+  # Default is false.
+  wrap_in_directory: true
+
+  # Additional files/globs you want to add to the archive.
+  # Defaults are any files matching `LICENCE*`, `LICENSE*`,
+  # `README*` and `CHANGELOG*` (case-insensitive).
+  files:
+    - LICENSE
+    - README.md
+    - ROADMAP.md
+    - VERSION
+
+snapshot:
+  # Allows you to change the name of the generated snapshot
+  # releases. The following variables are available:
+  # - Commit
+  # - Tag
+  # - Timestamp
+  # Default is `SNAPSHOT-{{.Commit}}`.
+  name_template: SNAPSHOT-{{.Commit}}
